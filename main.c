@@ -15,6 +15,16 @@ struct Paciente
 };
 typedef struct Paciente paciente;
 
+int compFloat(paciente* a, paciente* b)
+{
+    if (a->BIODATA.altura < b->BIODATA.altura)
+        return -1;
+    else if (a->BIODATA.altura > b->BIODATA.altura)
+        return 1;
+    else
+        return 0;
+}
+
 int tamanhoArq(char* aqruivo)
 {
     FILE* arq = fopen("pacientes.txt", "r");
@@ -65,8 +75,64 @@ void printPaciente(paciente* pessoa, int qtdLinhas)
 {
     for(int i = 0; i < qtdLinhas; i++)
     {
-        printf("%s: %.2f %.1f\n", pessoa[i].nome, pessoa[i].BIODATA.altura, pessoa[i].BIODATA.peso);
+        printf("%s\t\t%.2f %.1f\n", pessoa[i].nome, pessoa[i].BIODATA.altura, pessoa[i].BIODATA.peso);
     }
+}
+
+float calculaModa(paciente* pessoa, int qtdLinhas)
+{
+    if (qtdLinhas == 0)
+        return -1;
+
+    float moda = pessoa[0].BIODATA.altura;
+    int contModa = 0;
+
+    for (int i = 0; i < qtdLinhas; i++)
+    {
+        float alturaAtual = pessoa[i].BIODATA.altura;
+        int contAtual = 0;
+
+        while (i < qtdLinhas && pessoa[i].BIODATA.altura == alturaAtual)
+        {
+            contAtual++;
+            i++;
+        }
+
+        if (contAtual >= contModa)
+        {
+            moda = alturaAtual;
+            contModa = contAtual;
+        }
+    }
+
+    return moda;
+}
+
+int buscaPesoMaior(int qtdLinhas, paciente* pessoa, float altura)
+{
+    int ini = 0;
+    int fim = qtdLinhas - 1;
+    int meio, comp;
+    paciente auxiliar;
+    auxiliar.BIODATA.altura = altura;
+
+
+    while (ini <= fim)
+    {
+        meio = (ini + fim)/2;
+        comp = compFloat(&auxiliar, &pessoa[meio]);
+        if (comp == 0)
+        {
+            while (meio > 0 && compFloat(&auxiliar, &pessoa[meio +1]) == 0)
+                meio++;
+            return meio;
+        }
+        else if (comp < 0)
+            ini = meio + 1;
+        else
+            fim = meio - 1;
+    }
+    return -1;
 }
 
 int main(void)
@@ -90,6 +156,14 @@ int main(void)
     printf("Pacients:\n");
     printPaciente(pessoas, qtdLinhas);
     
+    printf("Moda: %.2f\n", calculaModa(pessoas, qtdLinhas));
+
+
+    // Último elemento 1.97 de altura
+    int ultimoElemento = buscaPesoMaior(qtdLinhas, pessoas, 1.97);
+    printf("Registro de maior peso com altura %.2f:\t%s %.2f %.1f\n", 1.97, pessoas[ultimoElemento].nome, pessoas[ultimoElemento].BIODATA.altura, pessoas[ultimoElemento].BIODATA.peso);
+
+
     free(pessoas);
     return 0;
 }
