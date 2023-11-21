@@ -1,3 +1,7 @@
+// Turma: 33C
+// Nome: Gabriel Robert Wischer Guedes
+// Matrícula: 2211784
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -35,7 +39,7 @@ int tamanhoArq(char* aqruivo)
     }
     int tamanho = 0;
 
-    while(!feof(arq))
+    while (!feof(arq))
     {
         fscanf(arq, " %*[^\n]");
         tamanho++;
@@ -47,13 +51,13 @@ int tamanhoArq(char* aqruivo)
 paciente* pacienteVetor(char* arquivo, int qtdLinhas)
 {
     FILE* arq = fopen("pacientes.txt", "r");
-    if(arq == NULL)
+    if (arq == NULL)
     {
         fclose(arq);
         return NULL;
     }
-    
-    paciente* pessoa = (paciente*) malloc(sizeof(paciente) * qtdLinhas);
+
+    paciente* pessoa = (paciente*)malloc(sizeof(paciente) * qtdLinhas);
     if (pessoa == NULL)
     {
         fclose(arq);
@@ -61,7 +65,7 @@ paciente* pacienteVetor(char* arquivo, int qtdLinhas)
     }
 
     int i = 0;
-    while(i < qtdLinhas)
+    while (i < qtdLinhas)
     {
         fscanf(arq, " %[^:]: %f %f", pessoa[i].nome, &pessoa[i].BIODATA.altura, &pessoa[i].BIODATA.peso);
         i++;
@@ -73,7 +77,7 @@ paciente* pacienteVetor(char* arquivo, int qtdLinhas)
 
 void printPaciente(paciente* pessoa, int qtdLinhas)
 {
-    for(int i = 0; i < qtdLinhas; i++)
+    for (int i = 0; i < qtdLinhas; i++)
     {
         printf("%s\t\t%.2f %.1f\n", pessoa[i].nome, pessoa[i].BIODATA.altura, pessoa[i].BIODATA.peso);
     }
@@ -113,14 +117,14 @@ int buscaPesoMaior(int qtdLinhas, paciente* pessoa, float altura)
     int ini = 0;
     int fim = qtdLinhas - 1;
     int meio, comp;
-    
+
     while (ini <= fim)
     {
         meio = (ini + fim) / 2;
         comp = compAltura(altura, &pessoa[meio]);
         if (comp == 0)
         {
-            while (meio > 0 && compAltura(altura, &pessoa[meio +1]) == 0)
+            while (meio > 0 && compAltura(altura, &pessoa[meio + 1]) == 0)
                 meio++;
             return meio;
         }
@@ -136,14 +140,14 @@ int main(void)
 {
     char* arquivo = "pacientes.txt";
     int qtdLinhas = tamanhoArq(arquivo);
-    if(qtdLinhas == -1)
+    if (qtdLinhas == -1)
     {
         printf("Falha ao abrir o arquivo.\n");
         return 1;
     }
 
     paciente* pessoas = pacienteVetor(arquivo, qtdLinhas);
-    if(pessoas == NULL)
+    if (pessoas == NULL)
     {
         printf("Falha na alocação de memória ou na abertura do arquivo.\n");
         return 1;
@@ -151,35 +155,34 @@ int main(void)
 
     printf("Pacients:\n");
     printPaciente(pessoas, qtdLinhas);
-    
+
     float moda = calculaModa(pessoas, qtdLinhas);
-    printf("Moda: %.2f\n", moda);
+    printf("\nModa: %.2f\n", moda);
 
     // Usando a moda
-    char** nomeModa = pessoas[buscaPesoMaior(qtdLinhas, pessoas,moda)].nome;
-    float alturaModa = pessoas[buscaPesoMaior(qtdLinhas, pessoas, moda)].BIODATA.altura;
-    float pesoModa = pessoas[buscaPesoMaior(qtdLinhas, pessoas, moda)].BIODATA.peso;
-    printf("\nRegistro de maior peso com altura %.2f:\t%s %.2f %.1f\n", moda, nomeModa, alturaModa, pesoModa);
+    int indiceModa = buscaPesoMaior(qtdLinhas, pessoas, moda);
+    char** nomeModa = pessoas[indiceModa].nome;
+    float alturaModa = pessoas[indiceModa].BIODATA.altura;
+    float pesoModa = pessoas[indiceModa].BIODATA.peso;
+    printf("Registro de maior peso com altura %.2f:\t%s %.2f %.1f\n", moda, nomeModa, alturaModa, pesoModa);
 
     // Usando 1.47
-    char** nomeAleatorio = pessoas[buscaPesoMaior(qtdLinhas, pessoas, 1.47)].nome;
-    float alturaAleatorio = pessoas[buscaPesoMaior(qtdLinhas, pessoas, 1.47)].BIODATA.altura;
-    float pesoAleatorio = pessoas[buscaPesoMaior(qtdLinhas, pessoas, 1.47)].BIODATA.peso;
-    printf("\nRegistro de maior peso com altura %.2f:\t%s %.2f %.1f\n", 1.47, nomeAleatorio, alturaAleatorio, pesoAleatorio);
-    
+    int indiceAleatorio = buscaPesoMaior(qtdLinhas, pessoas, 1.47);
+    char** nomeAleatorio = pessoas[indiceAleatorio].nome;
+    float alturaAleatorio = pessoas[indiceAleatorio].BIODATA.altura;
+    float pesoAleatorio = pessoas[indiceAleatorio].BIODATA.peso;
+    printf("Registro de maior peso com altura %.2f:\t%s %.2f %.1f\n", 1.47, nomeAleatorio, alturaAleatorio, pesoAleatorio);
+
     // Usando 1.97
-    char** nomeUltimo = pessoas[buscaPesoMaior(qtdLinhas, pessoas, 1.97)].nome;
-    float alturaUltimo = pessoas[buscaPesoMaior(qtdLinhas, pessoas, 1.97)].BIODATA.altura;
-    float pesoUltimo = pessoas[buscaPesoMaior(qtdLinhas, pessoas, 1.97)].BIODATA.peso;
-    printf("\nRegistro de maior peso com altura %.2f:\t%s %.2f %.1f\n", 1.97, nomeUltimo, alturaUltimo, pesoUltimo);
+    int indiceUltimo = buscaPesoMaior(qtdLinhas, pessoas, 1.97);
+    char** nomeUltimo = pessoas[indiceUltimo].nome;
+    float alturaUltimo = pessoas[indiceUltimo].BIODATA.altura;
+    float pesoUltimo = pessoas[indiceUltimo].BIODATA.peso;
+    printf("Registro de maior peso com altura %.2f:\t%s %.2f %.1f\n", 1.97, nomeUltimo, alturaUltimo, pesoUltimo);
 
     // Usando altura que não tem no arquivo
-    char** nomeInexistente = pessoas[buscaPesoMaior(qtdLinhas, pessoas, 2.10)].nome;
-    float alturaInexistente = pessoas[buscaPesoMaior(qtdLinhas, pessoas, 2.10)].BIODATA.altura;
-    float pesoInexistente = pessoas[buscaPesoMaior(qtdLinhas, pessoas, 2.10)].BIODATA.peso;
-    if (nomeInexistente == NULL)
-        printf("\nNao encontrado\n");
-
+    if (buscaPesoMaior(qtdLinhas, pessoas, 2.10) == -1)
+        printf("Não há registro com altura %.2f\n", 2.10);
 
     free(pessoas);
     return 0;
