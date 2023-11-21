@@ -2,11 +2,16 @@
 #include <stdlib.h>
 #include <string.h>
 
+struct biodata
+{
+    float altura;
+    float peso;
+};
+typedef struct biodata bioData;
 struct Paciente
 {
     char* nome[81];
-    float altura;
-    float peso;
+    bioData BIODATA;
 };
 typedef struct Paciente paciente;
 
@@ -14,13 +19,15 @@ int tamanhoArq(char* aqruivo)
 {
     FILE* arq = fopen("pacientes.txt", "r");
     if (arq == NULL)
+    {
+        fclose(arq);
         return -1;
+    }
     int tamanho = 0;
-    int np;
 
     while(!feof(arq))
     {
-        np = fscanf(arq, " %*[^\n]");
+        fscanf(arq, " %*[^\n]");
         tamanho++;
     }
 
@@ -31,14 +38,22 @@ paciente* pacienteVetor(char* arquivo, int qtdLinhas)
 {
     FILE* arq = fopen("pacientes.txt", "r");
     if(arq == NULL)
+    {
+        fclose(arq);
         return NULL;
+    }
     
     paciente* pessoa = (paciente*) malloc(sizeof(paciente) * qtdLinhas);
-    int i = 0;
+    if (pessoa == NULL)
+    {
+        fclose(arq);
+        return NULL;
+    }
 
+    int i = 0;
     while(i < qtdLinhas)
     {
-        fscanf(arq, " %[^:]: %f %f", &pessoa[i].nome, &pessoa[i].altura, &pessoa[i].peso);
+        fscanf(arq, " %[^:]: %f %f", pessoa[i].nome, &pessoa[i].BIODATA.altura, &pessoa[i].BIODATA.peso);
         i++;
     }
 
@@ -46,9 +61,12 @@ paciente* pacienteVetor(char* arquivo, int qtdLinhas)
     return pessoa;
 }
 
-void printPaciente(paciente* pessoa)
+void printPaciente(paciente* pessoa, int qtdLinhas)
 {
-    printf("%s: %.2f %.1f\n", pessoa->nome, pessoa->altura, pessoa->peso);
+    for(int i = 0; i < qtdLinhas; i++)
+    {
+        printf("%s: %.2f %.1f\n", pessoa[i].nome, pessoa[i].BIODATA.altura, pessoa[i].BIODATA.peso);
+    }
 }
 
 int main(void)
@@ -70,10 +88,7 @@ int main(void)
     }
 
     printf("Pacients:\n");
-    for(int i = 0; i < qtdLinhas; i++)
-    {
-        printPaciente(&pessoas[i]);
-    }
+    printPaciente(pessoas, qtdLinhas);
     
     free(pessoas);
     return 0;
