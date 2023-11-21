@@ -139,7 +139,6 @@ int main(void)
 {
     char* arquivo = "pacientes.txt";
     int qtdLinhas = tamanhoArq(arquivo);
-    
     if(qtdLinhas == -1)
     {
         printf("Falha ao abrir o arquivo.\n");
@@ -156,13 +155,20 @@ int main(void)
     printf("Pacients:\n");
     printPaciente(pessoas, qtdLinhas);
     
-    printf("Moda: %.2f\n", calculaModa(pessoas, qtdLinhas));
+    float moda = calculaModa(pessoas, qtdLinhas);
+    printf("Moda: %.2f\n", moda);
 
+    // Usando a moda
+    printf("Registro de maior peso com altura %.2f:\t%s %.2f %.1f\n", moda, pessoas[buscaPesoMaior(qtdLinhas, pessoas, moda)].nome, pessoas[buscaPesoMaior(qtdLinhas, pessoas, moda)].BIODATA.altura, pessoas[buscaPesoMaior(qtdLinhas, pessoas, moda)].BIODATA.peso);
 
-    // Último elemento 1.97 de altura
-    int ultimoElemento = buscaPesoMaior(qtdLinhas, pessoas, 1.97);
-    printf("Registro de maior peso com altura %.2f:\t%s %.2f %.1f\n", 1.97, pessoas[ultimoElemento].nome, pessoas[ultimoElemento].BIODATA.altura, pessoas[ultimoElemento].BIODATA.peso);
+    // Usando 1.47
+    printf("Registro de maior peso com altura %.2f:\t%s %.2f %.1f\n", 1.47, pessoas[buscaPesoMaior(qtdLinhas, pessoas, 1.47)].nome, pessoas[buscaPesoMaior(qtdLinhas, pessoas, 1.47)].BIODATA.altura, pessoas[buscaPesoMaior(qtdLinhas, pessoas, 1.47)].BIODATA.peso);
 
+    // Usando 1.97
+    char* nome = pessoas[buscaPesoMaior(qtdLinhas, pessoas, 1.97)].nome;
+    float altura = pessoas[buscaPesoMaior(qtdLinhas, pessoas, 1.97)].BIODATA.altura;
+    float peso = pessoas[buscaPesoMaior(qtdLinhas, pessoas, 1.97)].BIODATA.peso;
+    printf("Registro de maior peso com altura %.2f:\t%s %.2f %.1f\n", 1.97, nome, altura, peso);
 
     free(pessoas);
     return 0;
