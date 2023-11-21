@@ -129,6 +129,7 @@ int buscaPesoMaior(int qtdLinhas, paciente* pessoa, float altura)
         else
             ini = meio + 1;
     }
+    return -1;
 }
 
 int main(void)
@@ -155,16 +156,30 @@ int main(void)
     printf("Moda: %.2f\n", moda);
 
     // Usando a moda
-    printf("Registro de maior peso com altura %.2f:\t%s %.2f %.1f\n", moda, pessoas[buscaPesoMaior(qtdLinhas, pessoas, moda)].nome, pessoas[buscaPesoMaior(qtdLinhas, pessoas, moda)].BIODATA.altura, pessoas[buscaPesoMaior(qtdLinhas, pessoas, moda)].BIODATA.peso);
+    char** nomeModa = pessoas[buscaPesoMaior(qtdLinhas, pessoas,moda)].nome;
+    float alturaModa = pessoas[buscaPesoMaior(qtdLinhas, pessoas, moda)].BIODATA.altura;
+    float pesoModa = pessoas[buscaPesoMaior(qtdLinhas, pessoas, moda)].BIODATA.peso;
+    printf("\nRegistro de maior peso com altura %.2f:\t%s %.2f %.1f\n", moda, nomeModa, alturaModa, pesoModa);
 
     // Usando 1.47
-    printf("Registro de maior peso com altura %.2f:\t%s %.2f %.1f\n", 1.47, pessoas[buscaPesoMaior(qtdLinhas, pessoas, 1.47)].nome, pessoas[buscaPesoMaior(qtdLinhas, pessoas, 1.47)].BIODATA.altura, pessoas[buscaPesoMaior(qtdLinhas, pessoas, 1.47)].BIODATA.peso);
-
+    char** nomeAleatorio = pessoas[buscaPesoMaior(qtdLinhas, pessoas, 1.47)].nome;
+    float alturaAleatorio = pessoas[buscaPesoMaior(qtdLinhas, pessoas, 1.47)].BIODATA.altura;
+    float pesoAleatorio = pessoas[buscaPesoMaior(qtdLinhas, pessoas, 1.47)].BIODATA.peso;
+    printf("\nRegistro de maior peso com altura %.2f:\t%s %.2f %.1f\n", 1.47, nomeAleatorio, alturaAleatorio, pesoAleatorio);
+    
     // Usando 1.97
     char** nomeUltimo = pessoas[buscaPesoMaior(qtdLinhas, pessoas, 1.97)].nome;
     float alturaUltimo = pessoas[buscaPesoMaior(qtdLinhas, pessoas, 1.97)].BIODATA.altura;
     float pesoUltimo = pessoas[buscaPesoMaior(qtdLinhas, pessoas, 1.97)].BIODATA.peso;
     printf("\nRegistro de maior peso com altura %.2f:\t%s %.2f %.1f\n", 1.97, nomeUltimo, alturaUltimo, pesoUltimo);
+
+    // Usando altura que não tem no arquivo
+    char** nomeInexistente = pessoas[buscaPesoMaior(qtdLinhas, pessoas, 2.10)].nome;
+    float alturaInexistente = pessoas[buscaPesoMaior(qtdLinhas, pessoas, 2.10)].BIODATA.altura;
+    float pesoInexistente = pessoas[buscaPesoMaior(qtdLinhas, pessoas, 2.10)].BIODATA.peso;
+    if (nomeInexistente == NULL)
+        printf("\nNao encontrado\n");
+
 
     free(pessoas);
     return 0;
