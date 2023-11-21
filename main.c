@@ -15,11 +15,11 @@ struct Paciente
 };
 typedef struct Paciente paciente;
 
-int compFloat(paciente* a, paciente* b)
+int compAltura(float a, paciente* b)
 {
-    if (a->BIODATA.altura < b->BIODATA.altura)
+    if (a < b->BIODATA.altura)
         return -1;
-    else if (a->BIODATA.altura > b->BIODATA.altura)
+    else if (a > b->BIODATA.altura)
         return 1;
     else
         return 0;
@@ -113,26 +113,22 @@ int buscaPesoMaior(int qtdLinhas, paciente* pessoa, float altura)
     int ini = 0;
     int fim = qtdLinhas - 1;
     int meio, comp;
-    paciente auxiliar;
-    auxiliar.BIODATA.altura = altura;
-
-
+    
     while (ini <= fim)
     {
-        meio = (ini + fim)/2;
-        comp = compFloat(&auxiliar, &pessoa[meio]);
+        meio = (ini + fim) / 2;
+        comp = compAltura(altura, &pessoa[meio]);
         if (comp == 0)
         {
-            while (meio > 0 && compFloat(&auxiliar, &pessoa[meio +1]) == 0)
+            while (meio > 0 && compAltura(altura, &pessoa[meio +1]) == 0)
                 meio++;
             return meio;
         }
         else if (comp < 0)
-            ini = meio + 1;
-        else
             fim = meio - 1;
+        else
+            ini = meio + 1;
     }
-    return -1;
 }
 
 int main(void)
@@ -165,10 +161,10 @@ int main(void)
     printf("Registro de maior peso com altura %.2f:\t%s %.2f %.1f\n", 1.47, pessoas[buscaPesoMaior(qtdLinhas, pessoas, 1.47)].nome, pessoas[buscaPesoMaior(qtdLinhas, pessoas, 1.47)].BIODATA.altura, pessoas[buscaPesoMaior(qtdLinhas, pessoas, 1.47)].BIODATA.peso);
 
     // Usando 1.97
-    char* nome = pessoas[buscaPesoMaior(qtdLinhas, pessoas, 1.97)].nome;
-    float altura = pessoas[buscaPesoMaior(qtdLinhas, pessoas, 1.97)].BIODATA.altura;
-    float peso = pessoas[buscaPesoMaior(qtdLinhas, pessoas, 1.97)].BIODATA.peso;
-    printf("Registro de maior peso com altura %.2f:\t%s %.2f %.1f\n", 1.97, nome, altura, peso);
+    char** nomeUltimo = pessoas[buscaPesoMaior(qtdLinhas, pessoas, 1.97)].nome;
+    float alturaUltimo = pessoas[buscaPesoMaior(qtdLinhas, pessoas, 1.97)].BIODATA.altura;
+    float pesoUltimo = pessoas[buscaPesoMaior(qtdLinhas, pessoas, 1.97)].BIODATA.peso;
+    printf("\nRegistro de maior peso com altura %.2f:\t%s %.2f %.1f\n", 1.97, nomeUltimo, alturaUltimo, pesoUltimo);
 
     free(pessoas);
     return 0;
